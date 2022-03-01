@@ -1,0 +1,7 @@
+test_cases/load_data.txt 20 python3 -c import hw4;print(hw4.load_data('Pokemon.csv'))
+test_cases/calc_features.txt 5 python3 -c import hw4;print(hw4.calc_features({'#': '1', 'Name': 'Bulbasaur', 'Type 1': 'Grass', 'Type 2': 'Poison', 'Total': '318', 'HP': '45', 'Attack': '49', 'Defense': '49', 'Sp. Atk': '65', 'Sp. Def': '65', 'Speed': '45', 'Generation': '1', 'Legendary': 'False'}))
+test_cases/calc_features_type1.txt 5 python3 -c import hw4;print((lambda x: type(hw4.calc_features(x)))({'#': '1', 'Name': 'Bulbasaur', 'Type 1': 'Grass', 'Type 2': 'Poison', 'Total': '318', 'HP': '45', 'Attack': '49', 'Defense': '49', 'Sp. Atk': '65', 'Sp. Def': '65', 'Speed': '45', 'Generation': '1', 'Legendary': 'False'}))
+test_cases/calc_features_type2.txt 5 python3 -c import hw4;print((lambda x: type(hw4.calc_features(x)[0]))({'#': '1', 'Name': 'Bulbasaur', 'Type 1': 'Grass', 'Type 2': 'Poison', 'Total': '318', 'HP': '45', 'Attack': '49', 'Defense': '49', 'Sp. Atk': '65', 'Sp. Def': '65', 'Speed': '45', 'Generation': '1', 'Legendary': 'False'}))
+test_cases/hac.txt 10 python3 -c import hw4; import numpy as np; X = np.load('test_cases/features.npy');print(hw4.hac([row for row in X]))
+test_cases/hac_shape.txt 10 python3 -c import hw4; import numpy as np; X = np.load('test_cases/features.npy');print(hw4.hac([row for row in X]).shape)
+test_cases/imshow_hac.txt 0 python3 -c import hw4; import numpy as np;print(hw4.imshow_hac(np.load('test_cases/Z.npy')))

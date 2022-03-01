@@ -19,6 +19,9 @@ class Cluster:
     def __eq__(self, __o: object) -> bool:
         return self.id == __o.id
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
 #Loads data in from file. outputs as array of dicts
 def load_data(filepath):
     dicts = []
@@ -48,7 +51,7 @@ def hac(features):
     origLen = len(newDataset)
     distance_matrix = getDistances(features)
 
-    for x in range(len(origLen-1)):
+    for x in range(origLen-1):
         min = getMinDistance(distance_matrix, clusters)
 
         # get the matching clusters
@@ -68,7 +71,7 @@ def hac(features):
         smallerInd = cluster1.id if cluster1.id < cluster2.id else cluster2.id
 
         ## add to the thingy
-        newCluster = Cluster(cluster1.id if cluster1.id < cluster2.id else cluster2.id, newPoints, newSize)
+        newCluster = Cluster(origLen + smallerInd, newPoints, newSize)
         Z.append([smallerInd, largerInd, min[0], newCluster.numPoints])
 
         # remove the clusters and add the new one
@@ -76,7 +79,7 @@ def hac(features):
         clusters.remove(cluster2)
         clusters.add(newCluster)
     
-    return Z
+    return np.array(Z)
 
     
 def imshow_hac(Z):
@@ -111,7 +114,7 @@ def getDistances(data):
             distance[point][point2] = np.sqrt((x2-x1)**2 + (y2-y1)**2)
     return distance
 
-#Get minimum distance 
+#Get max distance 
 def getMinDistance(distances, clusters):
     min = [inf, 0, 0]
     scannedClusters = set([]) #keep track of clusters weve already looked at
@@ -122,21 +125,25 @@ def getMinDistance(distances, clusters):
             scannedClusters.add(cluster.id)
 
             if clusterComp.id in scannedClusters: continue
+
+            localDist = []
             
             #Iterate through each point in the cluster
             for point in cluster.points:
                 for pointComp in clusterComp.points:
                     
-                    dataVal = [distances[point][pointComp], cluster.id, clusterComp.id]
+                    # add to the list
+                    localDist.append(distances[point][pointComp])
+            
+            ## Check if the distance is a minimum
+            dataVal = [max(localDist), cluster.id, clusterComp.id]
 
-                    # Check if distance is a min
-                    if dataVal[0] < min[0]:
-                        min = dataVal
-                    elif dataVal[0] == min[0]:
-                        if dataVal[1] == min[1]:
-                            min = dataVal if dataVal[2] < min[2] else min
-                        else:
-                            min = dataVal if dataVal[1] < min[1] else min
+            if dataVal[0] < min[0]:
+                min = dataVal
+            elif dataVal[0] == min[0]:
+                if dataVal[1] == min[1]:
+                    min = dataVal if dataVal[2] < min[2] else min
+                else:
+                    min = dataVal if dataVal[1] < min[1] else min
     
     return min
-
