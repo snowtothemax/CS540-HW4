@@ -71,7 +71,7 @@ def hac(features):
         smallerInd = cluster1.id if cluster1.id < cluster2.id else cluster2.id
 
         ## add to the thingy
-        newCluster = Cluster(origLen + smallerInd, newPoints, newSize)
+        newCluster = Cluster(origLen + x, newPoints, newSize)
         Z.append([smallerInd, largerInd, min[0], newCluster.numPoints])
 
         # remove the clusters and add the new one
@@ -85,33 +85,18 @@ def hac(features):
 def imshow_hac(Z):
     plt.figure()
     dn = hierarchy.dendrogram(Z)
-        
-
-
-#Represent the data as XY points on a 2D plane
-def calcXY(data):
-    points = []
-    for row in data:
-        x = row[0] + row[1] + row[2] #Attack + Sp. Atk + Speed
-        y = row[3] + row[4] + row[4] #Defense + Sp. Def + HP
-        points.append([x,y])
-    return points
+    plt.show()
 
 #Get the distance matrix for all points
 def getDistances(data):
     distance = [[-1 for i in range(len(data))] for j in range(len(data))]
-    
-    pointsXY = calcXY(data)
 
-    for point in range(len(pointsXY)):
-        for point2 in range(len(pointsXY)):
+    for point in range(len(data)):
+        for point2 in range(len(data)):
             #check for dupes
             if point == point2: continue
-            
-            x1,y1 = pointsXY[point][0], pointsXY[point][1]
-            x2,y2 = pointsXY[point2][0], pointsXY[point2][1]
 
-            distance[point][point2] = np.sqrt((x2-x1)**2 + (y2-y1)**2)
+            distance[point][point2] = np.linalg.norm(data[point2] - data[point])
     return distance
 
 #Get max distance 
